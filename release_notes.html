@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<html>
+  <head>
+    <title>Examples version 2.0.1 Release Notes</title>
+  <body bgcolor="white">
+    <p>
+      From time to time, I update the examples based on reader feedback
+      about bugs. It's my intention to <i>only</i> update the examples
+      when they do not follow the specifications, as opposed to add
+      work-arounds for specification-compliance bugs in various
+      containers. In the latter case, I instead inform the vendor about
+      the problem, in the hope that these examples will have a positive
+      impact on container-compliance over time.
+    </p>
+    <h1>Changes compared to version 2.0</h1>
+    The following things have been changed compared to the initial version:
+    <ul>
+      <li>
+        The example tag library validator has been disabled (commented out
+        in the TLD) to avoid a JDOM dependency in applications that want to
+        use the example tag library.
+      </li>
+      <li>
+        The missing HelloMIME servlet example source code file has been
+        added.
+      </li>
+      <li>
+        The JSTL implementation has been upgraded to Apache Taglibs
+        Standard 1.0.3, solving many problems related to reuse of tag
+        handler classes in containers that use a tag handler pool (such
+        as Tomcat 4.1.x), but not all: there are still problems with the
+        custom actions in the <i>I18N and Formatting</i> library (the
+        <code>fmt</code> default prefix), see below. Read the 
+        <i>JSTL-RI-ReleaseNotes.html</i> for details.
+      </li>
+      <li>
+        All examples have been tested with Tomcat 4.1.24. If you run
+        into any problems with a previous version of Tomcat, I recommend
+        that you upgrade to this version. Note that due to remaining bugs in
+        the Standard 1.0.3 JSTL implementation, you should disable tag handler
+        pooling in Tomcat 4.1.x with the <code>enablePooling</code> init
+        parameter for the JSP container in the <i>$CATALINA_HOME/conf/web.xml</i>
+        file:
+        <pre>
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;jsp&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;org.apache.jasper.servlet.JspServlet&lt;/servlet-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;logVerbosityLevel&lt;/param-name&gt;
+            &lt;param-value&gt;WARNING&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;enablePooling&lt;/param-name&gt;
+            &lt;param-value&gt;false&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;load-on-startup&gt;3&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+        </pre>
+      </li>
+    </ul>
+    <h1>Notes about the initial 2.0 version</h1>
+    <ul>
+      <li>
+        This inital version of the examples includes the Apache Taglibs
+        Standard tag library, version 1.0.1, which is the reference
+        implementation of the JSTL 1.0 specification. To download a more
+        recent version, if any, go to the 
+        <a href="http://jakarta.apache.org/taglibs/">Apache Taglibs web 
+         site.</a>
+      </li>
+      <li>
+        All examples have been tested with Tomcat 4.0.4, using JDK 1.4
+        and JDK 1.3.1_01. Due to a bug in JDK 1.3.1_01, you need to
+        explicitly specify that the bundled Xerces XML parser should be
+        used when processing the JSTL XML actions. You can do this by
+        setting a Java system property named "org.xml.sax.driver" to
+        the value "org.apache.xerces.parsers.SAXParser". The easiest way
+        to do this for the Tomcat 4.0.x container is by setting the
+        <code>CATALINA_OPS</code> environment variable:
+        <pre>
+  C:\> set CATALINA_OPS=-Dorg.xml.sax.driver=org.apache.xerces.parsers.SAXParser
+        </pre>
+        I recommend that you upgrade to JDK 1.4 instead, unless you have
+        strong reasons to stay with JDK 1.3.1.
+      </li>
+    </ul>
+  </body>
+</html>

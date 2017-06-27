@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+  "http://java.sun.com//dtd/web-app_2_3.dtd">
+
+<web-app>
+  <!-- Used by the JSTL I18N actions -->
+  <context-param>
+    <param-name>
+      javax.servlet.jsp.jstl.fmt.fallbackLocale
+    </param-name>
+    <param-value>
+      en
+    </param-value>
+  </context-param>
+
+  <!-- Used by the JSTL database actions -->
+  <context-param>
+    <param-name>
+      javax.servlet.jsp.jstl.sql.dataSource
+    </param-name>
+    <param-value>
+      jdbc:mysql:///test,org.gjt.mm.mysql.Driver
+    </param-value>
+  </context-param>
+
+  <!-- Used by the ResourceManagerListener in Chapter 18  -->
+  <context-param>
+    <param-name>driverClass</param-name>
+    <param-value>
+      org.gjt.mm.mysql.Driver
+    </param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>jdbcURL</param-name>
+    <param-value>
+      jdbc:mysql:///test
+    </param-value>
+  </context-param>
+
+  <!-- Filter and listener configurations for Chapter 18 -->
+  <filter>
+    <filter-name>accessControl</filter-name>
+    <filter-class>
+      com.ora.jsp.servlets.AccessControlFilter
+    </filter-class>
+    <init-param>
+      <param-name>loginPage</param-name>
+      <param-value>/ch18/login.jsp</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>accessControl</filter-name>
+    <url-pattern>/ch18/protected/*</url-pattern>
+  </filter-mapping>
+
+  <listener>
+    <listener-class>
+      com.ora.jsp.servlets.ResourceManagerListener
+    </listener-class>
+  </listener>
+
+  <listener>
+    <listener-class>
+      com.ora.jsp.servlets.SessionCounterListener
+    </listener-class>
+  </listener>
+
+  <!-- Servlet for showing JSP source. NOTE! Remove this in production -->
+  <servlet>
+    <servlet-name>jspSource</servlet-name>
+    <servlet-class>JSPSourceServlet</servlet-class>
+  </servlet>
+
+  <!-- 
+    Servlet for handling both servlet and JSP errors, see Chapter 18
+  -->
+  <servlet>
+    <servlet-name>errorDispatcher</servlet-name>
+    <servlet-class>com.ora.jsp.servlets.ErrorDispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>errorPage</param-name>
+      <param-value>/ch9/errorpage.jsp?debug=resp</param-value>
+    </init-param>
+  </servlet>
+
+  <!-- Struts Controller servlet, see Chapter 18 -->
+  <servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>jspSource</servlet-name>
+    <url-pattern>/jspSource/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>errorDispatcher</servlet-name>
+    <url-pattern>/errorDispatcher</url-pattern>
+  </servlet-mapping>
+
+  <!-- Struts Controller servlet mapping, see Chapter 18 -->
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+
+  <!-- The Welcome File List -->
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+<!--
+  Uncomment if you want all exceptions and 500 status codes to
+  be handled by the customized error page.
+  <error-page>
+    <exception-type>java.lang.Throwable</exception-type>
+    <location>/errorDispatcher</location>
+  </error-page>
+
+  <error-page>
+    <error-code>500</error-code>
+    <location>/errorDispatcher</location>
+  </error-page>
+-->
+
+  <!-- 
+    This resource reference is only used to test the JNDI config described 
+    in Chapter 23. None of the examples use it.
+  -->
+  <resource-ref>
+    <description>
+      JNDI DataSource for example database
+    </description>
+    <res-ref-name>jdbc/Example</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+    <res-sharing-scope>Sharable</res-sharing-scope>
+  </resource-ref>
+
+  <!-- Security constraints for examples in Chapter 12 -->
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>admin</web-resource-name>
+      <url-pattern>/ch12/admin/*</url-pattern>
+      <url-pattern>/ch12/search/delete.jsp</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>admin</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>search</web-resource-name>
+      <url-pattern>/ch12/search/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>admin</role-name>
+      <role-name>user</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>ORA Examples</realm-name>
+  </login-config>
+
+  <security-role>
+    <role-name>admin</role-name>
+  </security-role>
+  <security-role>
+    <role-name>user</role-name>
+  </security-role>
+
+</web-app>
